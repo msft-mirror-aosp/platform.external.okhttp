@@ -47,12 +47,10 @@ java_library {
     hostdex: true,
 
     sdk_version: "none",
-    libs: [
-        "core-all",
-        // TODO(b/129126571): Depend on Conscrypt stubs instead
-        "conscrypt",
-    ],
     system_modules: "core-all-system-modules",
+    libs: [
+        "conscrypt.module.intra.core.api.stubs",
+    ],
     java_version: "1.7",
 }
 
@@ -78,12 +76,10 @@ java_library {
     installable: true,
 
     sdk_version: "none",
-    libs: [
-        "core-all",
-        // TODO(b/129126571): Depend on Conscrypt stubs instead
-        "conscrypt",
-    ],
     system_modules: "core-all-system-modules",
+    libs: [
+        "conscrypt.module.intra.core.api.stubs",
+    ],
     java_version: "1.7",
 }
 
@@ -100,15 +96,13 @@ java_library {
     installable: true,
 
     sdk_version: "none",
+    system_modules: "core-all-system-modules",
     libs: [
-        "core-all",
-        // TODO(b/129126571): Depend on Conscrypt stubs instead
-        "conscrypt",
+        "conscrypt.module.intra.core.api.stubs",
     ],
     dex_preopt: {
         enabled: false,
     },
-    system_modules: "core-all-system-modules",
     java_version: "1.7",
 }
 
@@ -131,14 +125,13 @@ java_library {
     exclude_srcs: ["okhttp-tests/src/test/java/com/squareup/okhttp/WebPlatformUrlTest.java"],
 
     sdk_version: "none",
+    system_modules: "core-all-system-modules",
     libs: [
-        "core-all",
         "okhttp-nojarjar",
         "junit",
-        "conscrypt",
+        "conscrypt.module.intra.core.api.stubs",
         "bouncycastle-unbundled",
     ],
-    system_modules: "core-all-system-modules",
 
     java_version: "1.7",
 }
