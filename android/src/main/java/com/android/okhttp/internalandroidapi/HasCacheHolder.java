@@ -16,12 +16,6 @@
 
 package com.android.okhttp.internalandroidapi;
 
-import static android.annotation.SystemApi.Client.MODULE_LIBRARIES;
-
-import android.annotation.SystemApi;
-
-import libcore.util.NonNull;
-
 import com.squareup.okhttp.Cache;
 
 import java.io.File;
@@ -30,26 +24,21 @@ import java.io.File;
  * An interface used to indicate a class can return a {@link CacheHolder} object.
  * @hide
  */
-@SystemApi(client = MODULE_LIBRARIES)
-@libcore.api.CorePlatformApi(status = libcore.api.CorePlatformApi.Status.STABLE)
+@libcore.api.CorePlatformApi
 public interface HasCacheHolder {
 
     /**
      * Returns the {@link CacheHolder} object.
-     *
-     * @hide
      */
-    @SystemApi(client = MODULE_LIBRARIES)
-    @libcore.api.CorePlatformApi(status = libcore.api.CorePlatformApi.Status.STABLE)
-    @NonNull CacheHolder getCacheHolder();
+    @libcore.api.CorePlatformApi
+    CacheHolder getCacheHolder();
 
     /**
      * A holder for an OkHttp internal Cache object. This class exists as an opaque layer over
      * OkHttp internal classes.
      * @hide
      */
-    @SystemApi(client = MODULE_LIBRARIES)
-    @libcore.api.CorePlatformApi(status = libcore.api.CorePlatformApi.Status.STABLE)
+    @libcore.api.CorePlatformApi
     final class CacheHolder {
 
         private final Cache okHttpCache;
@@ -79,12 +68,9 @@ public interface HasCacheHolder {
          *
          * @param directory a writable directory
          * @param maxSizeBytes the maximum number of bytes this cache should use to store
-         *
-         * @hide
          */
-        @SystemApi(client = MODULE_LIBRARIES)
-        @libcore.api.CorePlatformApi(status = libcore.api.CorePlatformApi.Status.STABLE)
-        public static @NonNull CacheHolder create(@NonNull File directory, long maxSizeBytes) {
+        @libcore.api.CorePlatformApi
+        public static CacheHolder create(File directory, long maxSizeBytes) {
             Cache cache = new Cache(directory, maxSizeBytes);
             return new CacheHolder(cache);
         }
@@ -92,12 +78,9 @@ public interface HasCacheHolder {
         /**
          * Returns true if the arguments supplied would result in an equivalent cache to this one
          * being created if they were passed to {@link #create(File, long)}.
-         *
-         * @hide
          */
-        @SystemApi(client = MODULE_LIBRARIES)
-        @libcore.api.CorePlatformApi(status = libcore.api.CorePlatformApi.Status.STABLE)
-        public boolean isEquivalent(@NonNull File directory, long maxSizeBytes) {
+        @libcore.api.CorePlatformApi
+        public boolean isEquivalent(File directory, long maxSizeBytes) {
             return (okHttpCache.getDirectory().equals(directory)
                     && okHttpCache.getMaxSize() == maxSizeBytes
                     && !okHttpCache.isClosed());
