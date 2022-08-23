@@ -164,6 +164,8 @@ java_library {
     // Build against a "core_current" as it cannot use "current" as it has to
     // build in manifests without frameworks/base.
     sdk_version: "core_current",
+    // Make sure that this will be added to the sdk snapshot for S.
+    min_sdk_version: "S",
 }
 
 // Generate Version.java based on the version number from pom.xml.
