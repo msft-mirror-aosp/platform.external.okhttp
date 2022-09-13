@@ -140,7 +140,7 @@ java_library {
 java_library {
     name: "okhttp-norepackage",
     host_supported: true,
-
+    apex_available: ["com.android.adservices"],
     visibility: [
         "//art/build/sdk",
         "//external/grpc-grpc-java/okhttp",
