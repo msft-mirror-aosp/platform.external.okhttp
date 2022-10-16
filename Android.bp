@@ -32,6 +32,16 @@ license {
     ],
 }
 
+java_defaults {
+    name: "okhttp_errorprone_defaults",
+    errorprone: {
+        javacflags: [
+            "-Xep:InvalidTimeZoneID:WARN",
+            "-Xep:TryFailThrowable:WARN",
+        ],
+    },
+}
+
 // The source files that contribute to Android's core library APIs.
 filegroup {
     name: "okhttp_api_files",
@@ -49,6 +59,7 @@ nojarjar_visibility = [
 // non-jarjar'd version of okhttp to compile the tests against
 java_library {
     name: "okhttp-nojarjar",
+    defaults: ["okhttp_errorprone_defaults"],
     visibility: nojarjar_visibility,
     srcs: [
         "android/src/main/java/**/*.java",
@@ -91,6 +102,7 @@ filegroup {
 
 java_library {
     name: "okhttp",
+    defaults: ["okhttp_errorprone_defaults"],
     visibility: [
         "//art/build/apex",
         "//art/build/sdk",
@@ -139,6 +151,7 @@ java_library {
 // third-party or unbundled applications or libraries that require OkHttp.
 java_library {
     name: "okhttp-norepackage",
+    defaults: ["okhttp_errorprone_defaults"],
     host_supported: true,
     apex_available: ["com.android.adservices"],
     visibility: [
@@ -194,6 +207,7 @@ java_library {
 
 java_library {
     name: "okhttp-tests-nojarjar",
+    defaults: ["okhttp_errorprone_defaults"],
     visibility: nojarjar_visibility,
     srcs: [
         "android/test/java/**/*.java",
