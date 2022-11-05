@@ -155,7 +155,10 @@ java_library {
     name: "okhttp-norepackage",
     defaults: ["okhttp_errorprone_defaults"],
     host_supported: true,
-    apex_available: ["com.android.adservices"],
+    apex_available: [
+        "com.android.adservices",
+        "com.android.devicelock",
+    ],
     visibility: [
         "//art/build/sdk",
         "//external/grpc-grpc-java/okhttp",
