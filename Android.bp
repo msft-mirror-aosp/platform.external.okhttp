@@ -97,7 +97,7 @@ java_library {
         "//external/grpc-grpc-java/okhttp",
         "//external/robolectric-shadows",
         "//external/robolectric",
-        "//libcore",
+        "//libcore:__subpackages__",
         "//packages/modules/ArtPrebuilt",
     ],
     srcs: [
