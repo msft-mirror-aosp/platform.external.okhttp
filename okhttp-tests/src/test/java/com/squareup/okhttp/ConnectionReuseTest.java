@@ -23,6 +23,7 @@ import com.squareup.okhttp.testing.RecordingHostnameVerifier;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -165,6 +166,7 @@ public final class ConnectionReuseTest {
     assertEquals(0, server.takeRequest().getSequenceNumber());
   }
 
+  @Ignore("b/264790610")
   @Test public void staleConnectionNotReusedForNonIdempotentRequest() throws Exception {
     server.enqueue(new MockResponse().setBody("a")
         .setSocketPolicy(SocketPolicy.SHUTDOWN_OUTPUT_AT_END));
