@@ -19,11 +19,11 @@ import com.squareup.okhttp.internal.SslContextBuilder;
 import com.squareup.okhttp.mockwebserver.MockResponse;
 import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.squareup.okhttp.mockwebserver.SocketPolicy;
+import com.squareup.okhttp.mockwebserver.SocketShutdownListener;
 import com.squareup.okhttp.testing.RecordingHostnameVerifier;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -166,10 +166,11 @@ public final class ConnectionReuseTest {
     assertEquals(0, server.takeRequest().getSequenceNumber());
   }
 
-  @Ignore("b/264790610")
   @Test public void staleConnectionNotReusedForNonIdempotentRequest() throws Exception {
+    SocketShutdownListener shutdownListener = new SocketShutdownListener();
     server.enqueue(new MockResponse().setBody("a")
-        .setSocketPolicy(SocketPolicy.SHUTDOWN_OUTPUT_AT_END));
+        .setSocketPolicy(SocketPolicy.SHUTDOWN_OUTPUT_AT_END)
+        .setSocketShutdownListener(shutdownListener));
     server.enqueue(new MockResponse().setBody("b"));
 
     Request requestA = new Request.Builder()
@@ -178,6 +179,8 @@ public final class ConnectionReuseTest {
     Response responseA = client.newCall(requestA).execute();
     assertEquals("a", responseA.body().string());
     assertEquals(0, server.takeRequest().getSequenceNumber());
+
+    shutdownListener.waitForSocketShutdown();
 
     Request requestB = new Request.Builder()
         .url(server.url("/"))
