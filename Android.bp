@@ -158,6 +158,7 @@ java_library {
     apex_available: [
         "com.android.adservices",
         "com.android.devicelock",
+        "com.android.extservices",
     ],
     visibility: [
         "//art/build/sdk",
@@ -183,7 +184,7 @@ java_library {
     // build in manifests without frameworks/base.
     sdk_version: "core_current",
     // Make sure that this will be added to the sdk snapshot for S.
-    min_sdk_version: "S",
+    min_sdk_version: "30",
 }
 
 // Generate Version.java based on the version number from pom.xml.
