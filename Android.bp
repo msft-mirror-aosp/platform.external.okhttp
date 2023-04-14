@@ -159,6 +159,7 @@ java_library {
         "com.android.adservices",
         "com.android.devicelock",
         "com.android.extservices",
+        "com.android.ondevicepersonalization",
     ],
     visibility: [
         "//art/build/sdk",
