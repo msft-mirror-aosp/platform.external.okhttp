@@ -145,6 +145,7 @@ java_library {
     apex_available: [
         "com.android.adservices",
         "com.android.extservices",
+        "com.android.ondevicepersonalization",
     ],
     visibility: [
         "//art/build/sdk",
