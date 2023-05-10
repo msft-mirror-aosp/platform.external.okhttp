@@ -96,7 +96,8 @@ java_library {
         "//art/build/sdk",
         "//external/grpc-grpc-java/okhttp",
         "//external/robolectric-shadows",
-        "//libcore",
+        "//external/robolectric",
+        "//libcore:__subpackages__",
         "//packages/modules/ArtPrebuilt",
     ],
     srcs: [
@@ -125,6 +126,7 @@ java_library {
     visibility: [
         "//art/build/sdk",
         "//external/robolectric-shadows",
+        "//external/robolectric",
     ],
     static_libs: [
         "okhttp",
@@ -140,7 +142,11 @@ java_library {
 java_library {
     name: "okhttp-norepackage",
     host_supported: true,
-    apex_available: ["com.android.adservices"],
+    apex_available: [
+        "com.android.adservices",
+        "com.android.extservices",
+        "com.android.ondevicepersonalization",
+    ],
     visibility: [
         "//art/build/sdk",
         "//external/grpc-grpc-java/okhttp",
@@ -165,7 +171,7 @@ java_library {
     // build in manifests without frameworks/base.
     sdk_version: "core_current",
     // Make sure that this will be added to the sdk snapshot for S.
-    min_sdk_version: "S",
+    min_sdk_version: "30",
 }
 
 // Generate Version.java based on the version number from pom.xml.
