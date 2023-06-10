@@ -156,6 +156,7 @@ java_library {
     defaults: ["okhttp_errorprone_defaults"],
     host_supported: true,
     apex_available: [
+        "//apex_available:platform",
         "com.android.adservices",
         "com.android.devicelock",
         "com.android.extservices",
