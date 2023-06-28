@@ -155,7 +155,11 @@ java_library {
     name: "okhttp-norepackage",
     defaults: ["okhttp_errorprone_defaults"],
     host_supported: true,
-    apex_available: ["com.android.adservices"],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+        "com.android.extservices",
+    ],
     visibility: [
         "//art/build/sdk",
         "//external/grpc-grpc-java/okhttp",
@@ -181,6 +185,10 @@ java_library {
     sdk_version: "core_current",
     // Make sure that this will be added to the sdk snapshot for S.
     min_sdk_version: "S",
+    // This jar is packaged as part of the ART module host exports, use -target 8 so that it works
+    // with old JDKs.
+    java_version: "1.8",
+
 }
 
 // Generate Version.java based on the version number from pom.xml.
