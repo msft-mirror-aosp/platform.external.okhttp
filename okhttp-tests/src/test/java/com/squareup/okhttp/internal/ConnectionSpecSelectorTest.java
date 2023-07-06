@@ -41,11 +41,24 @@ public class ConnectionSpecSelectorTest {
 
   private SSLContext sslContext = SslContextBuilder.localhost();
 
+  // Android-changed: Use TLS 1.3 and 1.2 for testing
+  private static final ConnectionSpec TLS_SPEC_1_3 =
+      new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+      .tlsVersions(TlsVersion.TLS_1_3)
+      .build();
+
+  private static final ConnectionSpec TLS_SPEC_1_2 =
+      new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+      .tlsVersions(TlsVersion.TLS_1_2)
+      .build();
+
+
   @Test
   public void nonRetryableIOException() throws Exception {
     ConnectionSpecSelector connectionSpecSelector =
-        createConnectionSpecSelector(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS);
-    SSLSocket socket = createSocketWithEnabledProtocols(TlsVersion.TLS_1_1, TlsVersion.TLS_1_0);
+    // Android-changed: Use TLS 1.3 and 1.2 for testing
+        createConnectionSpecSelector(TLS_SPEC_1_3, TLS_SPEC_1_2);
+    SSLSocket socket = createSocketWithEnabledProtocols(TlsVersion.TLS_1_3, TlsVersion.TLS_1_2);
     connectionSpecSelector.configureSecureSocket(socket);
 
     boolean retry = connectionSpecSelector.connectionFailed(
@@ -57,8 +70,9 @@ public class ConnectionSpecSelectorTest {
   @Test
   public void nonRetryableSSLHandshakeException() throws Exception {
     ConnectionSpecSelector connectionSpecSelector =
-        createConnectionSpecSelector(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS);
-    SSLSocket socket = createSocketWithEnabledProtocols(TlsVersion.TLS_1_1, TlsVersion.TLS_1_0);
+    // Android-changed: Use TLS 1.3 and 1.2
+        createConnectionSpecSelector(TLS_SPEC_1_3, TLS_SPEC_1_2);
+    SSLSocket socket = createSocketWithEnabledProtocols(TlsVersion.TLS_1_3, TlsVersion.TLS_1_2);
     connectionSpecSelector.configureSecureSocket(socket);
 
     SSLHandshakeException trustIssueException =
@@ -72,8 +86,9 @@ public class ConnectionSpecSelectorTest {
   @Test
   public void retryableSSLHandshakeException() throws Exception {
     ConnectionSpecSelector connectionSpecSelector =
-        createConnectionSpecSelector(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS);
-    SSLSocket socket = createSocketWithEnabledProtocols(TlsVersion.TLS_1_1, TlsVersion.TLS_1_0);
+    // Android-changed: Use TLS 1.3 and 1.2
+        createConnectionSpecSelector(TLS_SPEC_1_3, TLS_SPEC_1_2);
+    SSLSocket socket = createSocketWithEnabledProtocols(TlsVersion.TLS_1_3, TlsVersion.TLS_1_2);
     connectionSpecSelector.configureSecureSocket(socket);
 
     boolean retry = connectionSpecSelector.connectionFailed(RETRYABLE_EXCEPTION);
@@ -88,24 +103,28 @@ public class ConnectionSpecSelectorTest {
             .tlsVersions(TlsVersion.SSL_3_0)
             .build();
 
+    // Android-changed: Use TLS 1.3 and 1.2 for testing
     ConnectionSpecSelector connectionSpecSelector = createConnectionSpecSelector(
-        ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS, sslV3);
+        TLS_SPEC_1_3, TLS_SPEC_1_2, sslV3);
 
-    TlsVersion[] enabledSocketTlsVersions = { TlsVersion.TLS_1_1, TlsVersion.TLS_1_0 };
+    // Android-changed: Use TLS 1.3 and 1.2 for testing
+    TlsVersion[] enabledSocketTlsVersions = { TlsVersion.TLS_1_3, TlsVersion.TLS_1_2 };
     SSLSocket socket = createSocketWithEnabledProtocols(enabledSocketTlsVersions);
 
-    // MODERN_TLS is used here.
+    // Android-changed: Use TLS 1.3 and 1.2 for testing
+    // TLS_SPEC_1_3 is used here.
     connectionSpecSelector.configureSecureSocket(socket);
-    assertEnabledProtocols(socket, TlsVersion.TLS_1_1, TlsVersion.TLS_1_0);
+    assertEnabledProtocols(socket, TlsVersion.TLS_1_3);
 
     boolean retry = connectionSpecSelector.connectionFailed(RETRYABLE_EXCEPTION);
     assertTrue(retry);
     socket.close();
 
-    // COMPATIBLE_TLS is used here.
+    // Android-changed: Use TLS 1.3 and 1.2 for testing
+    // TLS_SPEC_1_2 is used here.
     socket = createSocketWithEnabledProtocols(enabledSocketTlsVersions);
     connectionSpecSelector.configureSecureSocket(socket);
-    assertEnabledProtocols(socket, TlsVersion.TLS_1_0);
+    assertEnabledProtocols(socket, TlsVersion.TLS_1_2);
 
     retry = connectionSpecSelector.connectionFailed(RETRYABLE_EXCEPTION);
     assertFalse(retry);
