@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import org.junit.Assume;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -80,65 +81,75 @@ public final class ConnectionSpecTest {
 
   @Test public void tls_defaultCiphers_noFallbackIndicator() throws Exception {
     ConnectionSpec tlsSpec = new ConnectionSpec.Builder(true)
-        .tlsVersions(TlsVersion.TLS_1_2)
+        // Android-changed: Use TLS 1.3 and 1.2 for testing
+        .tlsVersions(TlsVersion.TLS_1_3)
         .supportsTlsExtensions(false)
         .build();
 
     SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket();
     socket.setEnabledCipherSuites(new String[] {
         CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA.javaName,
-        // Android-changed: Replace removed CBC cipher with GCM version
-        CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256.javaName,
+        // Android-changed: USe TLS 1.3 and 1.2 for testing - TLS 1.3 suites are implicit
+        // CipherSuite.TLS_AES_128_GCM_SHA384.javaName,
     });
     socket.setEnabledProtocols(new String[] {
+        // Android-changed: Use TLS 1.3 and 1.2 for testing
+        TlsVersion.TLS_1_3.javaName,
         TlsVersion.TLS_1_2.javaName,
-        TlsVersion.TLS_1_1.javaName,
     });
 
     assertTrue(tlsSpec.isCompatible(socket));
     tlsSpec.apply(socket, false /* isFallback */);
 
-    assertEquals(set(TlsVersion.TLS_1_2.javaName), set(socket.getEnabledProtocols()));
+    // Android-changed: Use TLS 1.3 and 1.2 for testing
+    assertEquals(set(TlsVersion.TLS_1_3.javaName), set(socket.getEnabledProtocols()));
 
     Set<String> expectedCipherSet =
         set(
             CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA.javaName,
-            // Android-changed: Replace removed CBC cipher with GCM version
-            CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256.javaName);
-    assertEquals(expectedCipherSet, expectedCipherSet);
+            // Android-changed: USe TLS 1.3 and 1.2 for testing - TLS 1.3 suites are implicit
+            CipherSuite.TLS_AES_128_GCM_SHA256.javaName,
+            CipherSuite.TLS_AES_256_GCM_SHA384.javaName,
+            CipherSuite.TLS_CHACHA20_POLY1305_SHA256.javaName);
+    assertEquals(expectedCipherSet, set(socket.getEnabledCipherSuites()));
   }
 
   @Test public void tls_defaultCiphers_withFallbackIndicator() throws Exception {
     ConnectionSpec tlsSpec = new ConnectionSpec.Builder(true)
-        .tlsVersions(TlsVersion.TLS_1_2)
+        // Android-changed: Use TLS 1.3 and 1.2 for testing
+        .tlsVersions(TlsVersion.TLS_1_3)
         .supportsTlsExtensions(false)
         .build();
 
     SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket();
     socket.setEnabledCipherSuites(new String[] {
         CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA.javaName,
-        // Android-changed: Replace removed CBC cipher with GCM version
-        CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256.javaName,
+        // Android-changed: USe TLS 1.3 and 1.2 for testing - TLS 1.3 suites are implicit
+        // CipherSuite.TLS_AES_128_GCM_SHA384.javaName,
     });
     socket.setEnabledProtocols(new String[] {
+        // Android-changed: Use TLS 1.3 and 1.2 for testing
+        TlsVersion.TLS_1_3.javaName,
         TlsVersion.TLS_1_2.javaName,
-        TlsVersion.TLS_1_1.javaName,
     });
 
     assertTrue(tlsSpec.isCompatible(socket));
     tlsSpec.apply(socket, true /* isFallback */);
 
-    assertEquals(set(TlsVersion.TLS_1_2.javaName), set(socket.getEnabledProtocols()));
+    // Android-changed: Use TLS 1.3 and 1.2 for testing
+    assertEquals(set(TlsVersion.TLS_1_3.javaName), set(socket.getEnabledProtocols()));
 
     Set<String> expectedCipherSet =
         set(
             CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA.javaName,
-            // Android-changed: Replace removed CBC cipher with GCM version
-            CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256.javaName);
+            // Android-changed: USe TLS 1.3 and 1.2 for testing - TLS 1.3 suites are implicit
+            CipherSuite.TLS_AES_128_GCM_SHA256.javaName,
+            CipherSuite.TLS_AES_256_GCM_SHA384.javaName,
+            CipherSuite.TLS_CHACHA20_POLY1305_SHA256.javaName);
     if (Arrays.asList(socket.getSupportedCipherSuites()).contains("TLS_FALLBACK_SCSV")) {
       expectedCipherSet.add("TLS_FALLBACK_SCSV");
     }
-    assertEquals(expectedCipherSet, expectedCipherSet);
+    assertEquals(expectedCipherSet, set(socket.getEnabledCipherSuites()));
   }
 
   @Test public void tls_explicitCiphers() throws Exception {
@@ -151,12 +162,13 @@ public final class ConnectionSpecTest {
     SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket();
     socket.setEnabledCipherSuites(new String[] {
         CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA.javaName,
-        // Android-changed: Replace removed CBC cipher with GCM version
-        CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256.javaName,
+        // Android-changed: USe TLS 1.3 and 1.2 for testing - TLS 1.3 suites are implicit
+        // CipherSuite.TLS_AES_128_GCM_SHA384.javaName,
     });
     socket.setEnabledProtocols(new String[] {
+        // Android-changed: Use TLS 1.3 and 1.2 for testing
+        TlsVersion.TLS_1_3.javaName,
         TlsVersion.TLS_1_2.javaName,
-        TlsVersion.TLS_1_1.javaName,
     });
 
     assertTrue(tlsSpec.isCompatible(socket));
@@ -189,8 +201,9 @@ public final class ConnectionSpecTest {
 
     SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket();
     socket.setEnabledProtocols(new String[] {
+        // Android-changed: Use TLS 1.3 and 1.2 for testing
+        TlsVersion.TLS_1_3.javaName,
         TlsVersion.TLS_1_2.javaName,
-        TlsVersion.TLS_1_1.javaName,
     });
 
     socket.setEnabledCipherSuites(new String[] {
@@ -236,12 +249,14 @@ public final class ConnectionSpecTest {
 
     SSLSocket sslSocket = (SSLSocket) SSLSocketFactory.getDefault().createSocket();
     sslSocket.setEnabledProtocols(new String[] {
-        TlsVersion.TLS_1_0.javaName(),
-        TlsVersion.TLS_1_1.javaName()
+        // Android-changed: Use TLS 1.3 and 1.2 for testing
+        TlsVersion.TLS_1_2.javaName,
+        TlsVersion.TLS_1_3.javaName,
     });
 
     tlsSpec.apply(sslSocket, false);
-    assertEquals(Arrays.asList(TlsVersion.TLS_1_0.javaName(), TlsVersion.TLS_1_1.javaName()),
+    // Android-changed: Use TLS 1.3 and 1.2 for testing
+    assertEquals(Arrays.asList(TlsVersion.TLS_1_2.javaName(), TlsVersion.TLS_1_3.javaName()),
         Arrays.asList(sslSocket.getEnabledProtocols()));
   }
 
@@ -253,6 +268,11 @@ public final class ConnectionSpecTest {
         .build();
 
     SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket();
+    // Android-changed: Only testable if TLS v1.1 is available as TLS 1.3 ciphers are
+    // not changeable on Android.
+    Assume.assumeTrue(
+        Arrays.asList(socket.getEnabledProtocols()).contains(TlsVersion.TLS_1_1.javaName));
+
     socket.setEnabledCipherSuites(new String[] {
         CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA.javaName,
     });
