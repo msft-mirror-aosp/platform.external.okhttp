@@ -15,6 +15,7 @@
  */
 package com.squareup.okhttp;
 
+import java.io.EOFException;
 import java.net.IDN;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -1621,10 +1622,15 @@ public final class HttpUrl {
         }
         utf8Buffer.writeUtf8CodePoint(codePoint);
         while (!utf8Buffer.exhausted()) {
-          int b = utf8Buffer.readByte() & 0xff;
-          out.writeByte('%');
-          out.writeByte(HEX_DIGITS[(b >> 4) & 0xf]);
-          out.writeByte(HEX_DIGITS[b & 0xf]);
+          try {
+            fakeEofExceptionMethod();
+            int b = utf8Buffer.readByte() & 0xff;
+            out.writeByte('%');
+            out.writeByte(HEX_DIGITS[(b >> 4) & 0xf]);
+            out.writeByte(HEX_DIGITS[b & 0xf]);
+          } catch (EOFException e) {
+            throw new IndexOutOfBoundsException(e.getMessage());
+          }
         }
       } else {
         // This character doesn't need encoding. Just copy it over.
@@ -1632,6 +1638,8 @@ public final class HttpUrl {
       }
     }
   }
+
+  private static void fakeEofExceptionMethod() throws EOFException {}
 
   static String canonicalize(String input, String encodeSet, boolean alreadyEncoded,
       boolean strict, boolean plusIsSpace, boolean asciiOnly) {
