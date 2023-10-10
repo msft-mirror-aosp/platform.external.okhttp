@@ -158,7 +158,9 @@ java_library {
     apex_available: [
         "//apex_available:platform",
         "com.android.adservices",
+        "com.android.devicelock",
         "com.android.extservices",
+        "com.android.ondevicepersonalization",
     ],
     visibility: [
         "//art/build/sdk",
@@ -187,11 +189,10 @@ java_library {
     // build in manifests without frameworks/base.
     sdk_version: "core_current",
     // Make sure that this will be added to the sdk snapshot for S.
-    min_sdk_version: "S",
+    min_sdk_version: "30",
     // This jar is packaged as part of the ART module host exports, use -target 8 so that it works
     // with old JDKs.
     java_version: "1.8",
-
 }
 
 // Generate Version.java based on the version number from pom.xml.
