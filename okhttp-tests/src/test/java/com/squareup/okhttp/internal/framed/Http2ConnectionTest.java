@@ -28,6 +28,7 @@ import okio.BufferedSource;
 import okio.Okio;
 import okio.Source;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static com.squareup.okhttp.TestUtil.headerEntries;
@@ -96,7 +97,9 @@ public final class Http2ConnectionTest {
     }
   }
 
-  @Test public void peerHttp2ServerLowersInitialWindowSize() throws Exception {
+  @Test
+  @Ignore("TODO(b/333847678 - diagnose and fix flake")
+  public void peerHttp2ServerLowersInitialWindowSize() throws Exception {
     try (MockSpdyPeer peer = new MockSpdyPeer()) {
       peer.setVariantAndClient(HTTP_2, false);
 

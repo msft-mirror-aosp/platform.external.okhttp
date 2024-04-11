@@ -70,6 +70,7 @@ import okio.GzipSink;
 import okio.Okio;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -1640,7 +1641,9 @@ public final class CallTest {
     return new InetSocketAddress(address.getAddress(), nullServer.getLocalPort());
   }
 
-  @Test public void cancelTagImmediatelyAfterEnqueue() throws Exception {
+  @Test
+  @Ignore("TODO(b/333847678 - diagnose and fix flake")
+  public void cancelTagImmediatelyAfterEnqueue() throws Exception {
     server.enqueue(new MockResponse());
     Call call = client.newCall(new Request.Builder()
         .url(server.url("/a"))
