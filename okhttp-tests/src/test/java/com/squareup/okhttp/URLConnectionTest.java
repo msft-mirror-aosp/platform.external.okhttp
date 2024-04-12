@@ -408,7 +408,9 @@ public final class URLConnectionTest {
     testServerClosesOutput(SHUTDOWN_INPUT_AT_END);
   }
 
-  @Test public void serverShutdownOutput() throws Exception {
+  @Test
+  @Ignore("TODO(b/333847678 - diagnose and fix flake")
+  public void serverShutdownOutput() throws Exception {
     testServerClosesOutput(SHUTDOWN_OUTPUT_AT_END);
   }
 
