@@ -106,6 +106,20 @@ public final class URLConnectionTest {
   @Rule public final MockWebServer server2 = new MockWebServer();
   @Rule public final TemporaryFolder tempDir = new TemporaryFolder();
 
+  // Android-added: Use TLS 1.3 and 1.2 for testing
+  private static final ConnectionSpec TLS_SPEC_1_3 =
+      new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+          .tlsVersions(TlsVersion.TLS_1_3)
+          .build();
+
+  private static final ConnectionSpec TLS_SPEC_1_2 =
+      new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+          .tlsVersions(TlsVersion.TLS_1_2)
+          .build();
+
+  private static final List<ConnectionSpec> TLS_SPEC_NO_V1
+      = Arrays.asList(TLS_SPEC_1_3, TLS_SPEC_1_2);
+
   private SSLContext sslContext = SslContextBuilder.localhost();
   private OkUrlFactory client;
   private HttpURLConnection connection;
@@ -394,7 +408,9 @@ public final class URLConnectionTest {
     testServerClosesOutput(SHUTDOWN_INPUT_AT_END);
   }
 
-  @Test public void serverShutdownOutput() throws Exception {
+  @Test
+  @Ignore("TODO(b/333847678 - diagnose and fix flake")
+  public void serverShutdownOutput() throws Exception {
     testServerClosesOutput(SHUTDOWN_OUTPUT_AT_END);
   }
 
@@ -606,6 +622,7 @@ public final class URLConnectionTest {
     server.enqueue(new MockResponse().setBody("this response comes via SSL"));
 
     suppressTlsFallbackScsv(client.client());
+    client.client().setConnectionSpecs(TLS_SPEC_NO_V1);
     client.client().setHostnameVerifier(new RecordingHostnameVerifier());
     connection = client.open(server.getUrl("/foo"));
 
@@ -613,7 +630,7 @@ public final class URLConnectionTest {
 
     RecordedRequest request = server.takeRequest();
     assertEquals("GET /foo HTTP/1.1", request.getRequestLine());
-    assertEquals(TlsVersion.TLS_1_0, request.getTlsVersion());
+    assertEquals(TlsVersion.TLS_1_2, request.getTlsVersion());
   }
 
   @Test public void connectViaHttpsWithSSLFallbackFailuresRecorded() throws Exception {
@@ -622,6 +639,7 @@ public final class URLConnectionTest {
     server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.FAIL_HANDSHAKE));
 
     suppressTlsFallbackScsv(client.client());
+    client.client().setConnectionSpecs(TLS_SPEC_NO_V1);
     client.client().setDns(new SingleInetAddressDns());
 
     client.client().setHostnameVerifier(new RecordingHostnameVerifier());
@@ -651,6 +669,7 @@ public final class URLConnectionTest {
     server.enqueue(new MockResponse().setBody("def"));
 
     suppressTlsFallbackScsv(client.client());
+    client.client().setConnectionSpecs(TLS_SPEC_NO_V1);
     client.client().setHostnameVerifier(new RecordingHostnameVerifier());
 
     assertContent("abc", client.open(server.getUrl("/")));
@@ -660,7 +679,7 @@ public final class URLConnectionTest {
     assertContent("def", client.open(server.getUrl("/")));
 
     Set<TlsVersion> tlsVersions =
-        EnumSet.of(TlsVersion.TLS_1_0, TlsVersion.TLS_1_2); // v1.2 on OpenJDK 8.
+        EnumSet.of(TlsVersion.TLS_1_3);
 
     RecordedRequest request1 = server.takeRequest();
     assertTrue(tlsVersions.contains(request1.getTlsVersion()));

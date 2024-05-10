@@ -15,6 +15,7 @@
 //
 
 package {
+    default_team: "trendy_team_java_core_libraries",
     default_visibility: ["//visibility:private"],
     default_applicable_licenses: ["external_okhttp_license"],
 }
@@ -155,7 +156,13 @@ java_library {
     name: "okhttp-norepackage",
     defaults: ["okhttp_errorprone_defaults"],
     host_supported: true,
-    apex_available: ["com.android.adservices"],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.adservices",
+        "com.android.devicelock",
+        "com.android.extservices",
+        "com.android.ondevicepersonalization",
+    ],
     visibility: [
         "//art/build/sdk",
         "//external/grpc-grpc-java/okhttp",
@@ -164,7 +171,6 @@ java_library {
     srcs: [
         "okhttp/src/main/java/**/*.java",
         "okhttp-urlconnection/src/main/java/**/*.java",
-        "okio/okio/src/main/java/**/*.java",
         ":okhttp_version.java",
     ],
 
@@ -175,12 +181,19 @@ java_library {
         "okhttp-android-util-log",
     ],
 
+    static_libs: [
+        "okio-lib",
+    ],
+
     installable: true,
     // Build against a "core_current" as it cannot use "current" as it has to
     // build in manifests without frameworks/base.
     sdk_version: "core_current",
     // Make sure that this will be added to the sdk snapshot for S.
-    min_sdk_version: "S",
+    min_sdk_version: "30",
+    // This jar is packaged as part of the ART module host exports, use -target 8 so that it works
+    // with old JDKs.
+    java_version: "1.8",
 }
 
 // Generate Version.java based on the version number from pom.xml.
