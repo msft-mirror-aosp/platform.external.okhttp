@@ -76,7 +76,7 @@ java_library {
     sdk_version: "none",
     system_modules: "core-all-system-modules",
     libs: [
-        "conscrypt.module.intra.core.api",
+        "conscrypt.module.intra.core.api.stubs",
     ],
     java_version: "1.7",
 }
@@ -107,6 +107,7 @@ java_library {
     visibility: [
         "//art/build/apex",
         "//art/build/sdk",
+        "//art/tools/fuzzer",
         "//external/grpc-grpc-java/okhttp",
         "//external/robolectric-shadows",
         "//external/robolectric",
@@ -123,7 +124,7 @@ java_library {
     sdk_version: "none",
     system_modules: "core-all-system-modules",
     libs: [
-        "conscrypt.module.intra.core.api",
+        "conscrypt.module.intra.core.api.stubs",
     ],
     java_version: "1.7",
     apex_available: [
@@ -244,7 +245,7 @@ java_library {
     libs: [
         "okhttp-nojarjar",
         "junit",
-        "conscrypt.module.intra.core.api",
+        "conscrypt.module.intra.core.api.stubs",
         "bouncycastle-unbundled",
     ],
 
