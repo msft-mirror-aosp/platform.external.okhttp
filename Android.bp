@@ -164,6 +164,7 @@ java_library {
         "com.android.devicelock",
         "com.android.extservices",
         "com.android.ondevicepersonalization",
+        "com.android.virt",
     ],
     visibility: [
         "//art/build/sdk",
