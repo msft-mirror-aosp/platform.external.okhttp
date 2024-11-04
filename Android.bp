@@ -107,6 +107,7 @@ java_library {
     visibility: [
         "//art/build/apex",
         "//art/build/sdk",
+        "//art/tools/ahat",
         "//art/tools/fuzzer",
         "//external/grpc-grpc-java/okhttp",
         "//external/robolectric-shadows",
@@ -163,6 +164,7 @@ java_library {
         "com.android.devicelock",
         "com.android.extservices",
         "com.android.ondevicepersonalization",
+        "com.android.virt",
     ],
     visibility: [
         "//art/build/sdk",
