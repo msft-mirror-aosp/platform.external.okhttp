@@ -29,7 +29,7 @@ license {
         "SPDX-license-identifier-Apache-2.0",
     ],
     license_text: [
-        "LICENSE.txt",
+        "LICENSE",
     ],
 }
 
@@ -169,6 +169,7 @@ java_library {
     visibility: [
         "//art/build/sdk",
         "//external/grpc-grpc-java/okhttp",
+        "//vendor:__subpackages__",
     ],
 
     srcs: [
