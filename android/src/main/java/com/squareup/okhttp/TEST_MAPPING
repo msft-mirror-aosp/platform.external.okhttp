@@ -1,12 +1,7 @@
 {
   "presubmit": [
     {
-      "name": "CtsLibcoreOkHttpTestCases",
-      "options": [
-        {
-          "include-filter": "com.squareup.okhttp"
-        }
-      ]
+      "name": "CtsLibcoreOkHttpTestCases_squareup_okhttp"
     }
   ]
 }
