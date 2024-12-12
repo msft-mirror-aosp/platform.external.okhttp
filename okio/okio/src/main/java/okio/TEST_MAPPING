@@ -1,12 +1,7 @@
 {
   "presubmit": [
     {
-      "name": "CtsLibcoreOkHttpTestCases",
-      "options": [
-        {
-          "include-filter": "okio"
-        }
-      ]
+      "name": "CtsLibcoreOkHttpTestCases_okio"
     }
   ]
 }
