@@ -1,12 +1,7 @@
 {
   "presubmit": [
     {
-      "name": "CtsLibcoreOkHttpTestCases",
-      "options": [
-        {
-          "include-filter": "com.squareup.okhttp.internal.tls"
-        }
-      ]
+      "name": "CtsLibcoreOkHttpTestCases_internal_tls"
     }
   ]
 }
