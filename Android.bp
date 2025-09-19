@@ -105,10 +105,7 @@ java_library {
     name: "okhttp",
     defaults: ["okhttp_errorprone_defaults"],
     visibility: [
-        "//art/build/apex",
-        "//art/build/sdk",
-        "//art/tools/ahat",
-        "//art/tools/fuzzer",
+        "//art:__subpackages__",
         "//external/grpc-grpc-java/okhttp",
         "//external/robolectric-shadows",
         "//external/robolectric",
